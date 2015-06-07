@@ -237,11 +237,18 @@ section.module h2 {
   margin-bottom: 20px;
   font-size: 36px;
 }
+section.module h3 {
+  margin-bottom: 12px;
+}
 section.module p {
   font-size: 16px;
   font-weight: 300;
   padding-bottom: 11px;
   line-height: 1.2
+}
+section.module ol {
+  padding-left: 44px;
+  padding-bottom: 11px;
 }
 section.module p:last-child {
   margin-bottom: 0;
@@ -267,6 +274,12 @@ section.module.parallax h1 {
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+section.module.parallax img {
+  padding-top: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 section.module.parallax-1 {
   background-image: url("images/snappier-cropped.jpg");
