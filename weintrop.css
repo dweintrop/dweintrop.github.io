@@ -92,6 +92,51 @@ a:hover {
   vertical-align: text-top;
 }
 
+.gh {
+  font-size:15px;
+  vertical-align: text-bottom;
+  color: #b24926;
+  background: url('images/github-orange.png');
+  background-size: 17px;
+  background-repeat: no-repeat;
+  background-position: right 5px;
+  padding-right: 19px;
+  padding-top: 5px;
+}
+
+.gh:hover {
+  color: #333;
+  background: url('images/github.png');
+  background-size: 17px;
+  background-repeat: no-repeat;
+  background-position: right 5px;
+  padding-right: 19px;
+  padding-top: 5px;
+}
+
+
+.ext-link {
+  font-size:15px;
+  vertical-align: text-bottom;
+  color: #b24926;
+  background: url('images/ext-link-orange.png');
+  background-size: 14px;
+  background-repeat: no-repeat;
+  background-position: right 6px;
+  padding-right: 14px;
+  padding-top: 5px;
+}
+
+.ext-link:hover {
+  color: #333;
+  background: url('images/ext-link.png');
+  background-size: 14px;
+  background-repeat: no-repeat;
+  background-position: right 6px;
+  padding-right: 14px;
+  padding-top: 5px;
+}
+
 /* =Template
 -------------------------------------------------------------- */
 
