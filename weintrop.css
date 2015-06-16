@@ -382,10 +382,10 @@ section.module.parallax img {
   display: block;
 }
 section.module.parallax-1 {
-  background-image: url("images/snappier-cropped.jpg");
+  background-image: url("images/pencilcc.jpg");
 }
 section.module.parallax-2 {
-  background-image: url("images/snappier-cropped2.jpg");
+  background-image: url("images/snappier-cropped.jpg");
 }
 section.module.parallax-3 {
   background-image: url("images/roboBuilder.jpg");
