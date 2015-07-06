@@ -165,6 +165,8 @@ header {
   -ms-transition: height .75s;
   -o-transition: height .75s;
   transition: height .75s; 
+  
+  font-size: 22px;
   /*transition-delay: .5s;*/
   }
   header #name {
@@ -173,7 +175,6 @@ header {
     line-height: 75px;
     float: left;
     font-family: "Oswald", sans-serif;
-    font-size: 60px;
     color: white;
     font-weight: 400;
     padding-top: 11px;
@@ -205,7 +206,11 @@ header {
       /*color: #9fdbfc;*/
       color: azure;
       font-weight: 700;
-      font-size: 22px;
+      
+
+      /*font-size: 22px;*/
+
+
     /*  -webkit-transition: all .75s;
       -moz-transition: all .75s;
       -ms-transition: all .75s;
@@ -228,7 +233,7 @@ header {
       width: 40%;
       /*height: 75px;*/
       /*line-height: 75px;*/
-      font-size: 30px;
+      /*font-size: 30px;*/
 /*      -webkit-transition: all .75s;
       -moz-transition: all .75s;
       -ms-transition: all .75s;
@@ -319,7 +324,7 @@ ul li {
 }
 
 .award {
-  background: url("http://localhost:8003/images/award.png");
+  background: url("images/award.png");
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: left;
