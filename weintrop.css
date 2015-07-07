@@ -387,16 +387,20 @@ section.module.parallax img {
   display: block;
 }
 section.module.parallax-1 {
-  background-image: url("images/pencilcc.jpg");
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/pencilcc.jpg");
+  background-size:100%;
 }
 section.module.parallax-2 {
-  background-image: url("images/snappier-cropped.jpg");
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/snappier-cropped.jpg");
+  background-size:100%;
 }
 section.module.parallax-3 {
-  background-image: url("images/roboBuilder.jpg");
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/roboBuilder.jpg");
+  background-size:100%;
 }
 section.module.parallax-4 {
-  background-image: url("images/ct-stem.jpg");
+  background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/ct-stem.jpg");
+  background-size:100%;
 }
 
 @media all and (min-width: 600px) {
