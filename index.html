@@ -65,11 +65,16 @@
 
   window.addEventListener('hashchange', loadContents);
   function loadContents() {
-    var page=window.location.hash.substring(1) + '.html';
+    var page = window.location.hash.substring(1).split("?") [0] + '.html';
+    var extension = window.location.hash.substring(1).split("?") [1]
     if (page === '.html') {
       page = 'about.html';
     }
-    $('#content').load(page);
+    $('#content').load(page, function () {
+      if (extension) {
+        $("html, body").animate({ scrollTop: $('#' + extension).offset().top - 250}, 1000);
+      }
+    });
   }
   loadContents();
 
