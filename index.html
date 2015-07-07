@@ -21,7 +21,6 @@
   </script>
 
   <script src='prefixfree.min.js'></script>
-  <script src='FitText.js'></script>
 
   <link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
   <link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
@@ -55,9 +54,11 @@
     header = document.querySelector("header");
     if (distanceY > shrinkOn) {
       $('#header_nav').addClass("smaller");
+      resizeLinksText();
     } else {
       if ($('#header_nav').hasClass("smaller")) {
-        $('#header_nav').removeClass("smaller");  
+        $('#header_nav').removeClass("smaller"); 
+        resizeLinksText(); 
       }
     }
   });
@@ -72,7 +73,14 @@
   }
   loadContents();
 
-  jQuery("#header_links").fitText(3, { maxFontSize: '22px' });
+  function resizeLinksText() {
+    if ($('#header_nav').hasClass("smaller")) {
+      var header_links = $('#header_links');
+      header_links.css('font-size', Math.min(header_links.width() / 30, 22));
+    }
+  }
+
+  $(window).on('resize', resizeLinksText);
 
 </script>
 </html>
