@@ -48,19 +48,12 @@
 </body>
 <script>
 
+// resize header on scroll
   $(window).scroll(function(){
-    var distanceY = window.pageYOffset || document.documentElement.scrollTop,
-    shrinkOn = 10,
-    header = document.querySelector("header");
-    if (distanceY > shrinkOn) {
-      $('#header_nav').addClass("smaller");
-      resizeLinksText();
-    } else {
-      if ($('#header_nav').hasClass("smaller")) {
-        $('#header_nav').removeClass("smaller"); 
-        $('#header_links').css('font-size', 22); 
-      }
-    }
+    var distanceY = window.pageYOffset || document.documentElement.scrollTop;
+    $('#header_nav').css('height', Math.max( (161 - distanceY), 75));  
+    $('#name').css('width', Math.max( (100 - distanceY), 40) + '%');  
+    $('nav').css('margin-top', Math.max( (120 - distanceY), 20));  
   });
 
   window.addEventListener('hashchange', loadContents);
@@ -79,13 +72,11 @@
   loadContents();
 
   function resizeLinksText() {
-    if ($('#header_nav').hasClass("smaller")) {
-      var header_links = $('#header_links');
-      header_links.css('font-size', Math.min(header_links.width() / 30, 22));
-    }
+    $('#header_links').css('font-size', Math.max(11, Math.min($('#name').height() / 5.5, 22)));
   }
 
   $(window).on('resize', resizeLinksText);
+  $(window).on('load', resizeLinksText);
 
 </script>
 </html>
