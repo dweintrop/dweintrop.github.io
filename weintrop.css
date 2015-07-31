@@ -336,26 +336,33 @@ section.module.parallax h1 {
   text-transform: uppercase;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
 section.module.parallax img {
   padding-top: 250px;
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
+
+
 section.module.parallax-1 {
   background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/pencilcc.jpg");
+  background-attachment: fixed;
   background-size:100%;
 }
 section.module.parallax-2 {
   background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/snappier-cropped.jpg");
+  background-attachment: fixed;
   background-size:100%;
 }
 section.module.parallax-3 {
   background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/roboBuilder.jpg");
+  background-attachment: fixed;
   background-size:100%;
 }
 section.module.parallax-4 {
   background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/ct-stem.jpg");
+  background-attachment: fixed;
   background-size:100%;
 }
 
