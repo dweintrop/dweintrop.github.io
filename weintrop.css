@@ -256,7 +256,7 @@ ul
 {
   list-style-type: none;
   padding: 0;
-  margin-top: -8px;
+  /*margin-top: -8px;*/
 }
 
 ul li {
@@ -270,8 +270,22 @@ ul li {
 
 /* PUBS
 -------------------------------------------------------------- */
-#pubs .module {
+#pubs h2 {
+  padding: 0px;
+  margin-bottom: 8px;
+}
+
+#pubs section {
+  padding-top: 30px;
   padding-bottom: 0px;
+}
+
+#pubs ul{
+  padding-left: 16px;
+}
+
+#pubs #pub-type {
+  padding-top: 8px;
 }
 
 #pubs li{
@@ -367,6 +381,7 @@ section.module.parallax-4 {
   background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url("images/ct-stem.jpg");
   background-attachment: fixed;
   background-size:100%;
+  background-position-y: 106px;
 }
 
 @media all and (min-width: 600px) {
