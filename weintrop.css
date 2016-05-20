@@ -113,6 +113,26 @@ a:hover {
   padding-top: 5px;
 }
 
+.video {
+  font-size:15px;
+  color: #b24926;
+  background: url('images/video-orange.png');
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: right 3px; 
+  padding-right: 22px;
+  padding-top: 5px;
+}
+
+.video:hover {
+  color: #333;
+  background: url('images/video.png');
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: right 3px; 
+  padding-right: 22px;
+  padding-top: 5px;
+}
 
 .ext-link {
   font-size:15px;
