@@ -67,6 +67,21 @@ Blockly.Blocks['config_move'] = {
   }
 };
 
+Blockly.Blocks['move_to_dropdowns'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Move")
+        .appendField(new Blockly.FieldDropdown([["directly","direct"], ["quickly","quick"], ["smoothly","smooth"]]), "move_type")
+        .appendField("to")
+        .appendField(new Blockly.FieldVariable("home"), "dest");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(60);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  }
+};
+
 Blockly.Blocks['go_home'] = {
   init: function() {
     this.appendDummyInput()
