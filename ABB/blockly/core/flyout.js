@@ -734,6 +734,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // Special category for procedures.
     xmlList =
         Blockly.Procedures.flyoutCategory(this.workspace_.targetWorkspace);
+  } else if (xmlList == "LOCATION") {
+    // Special category for procedures.
+    xmlList =
+        Blockly.Locations.flyoutCategory(this.workspace_.targetWorkspace);
   }
 
   this.setVisible(true);

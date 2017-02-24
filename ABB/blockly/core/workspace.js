@@ -80,6 +80,10 @@ Blockly.Workspace = function(opt_options) {
    * that are not currently in use.
    */
   this.variableList = [];
+  /*
+   * A list of all of the named locations in the workspace.
+   */
+  this.locationList = [];
 };
 
 /**
@@ -354,6 +358,179 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
 Blockly.Workspace.prototype.variableIndexOf = function(name) {
   for (var i = 0, varname; varname = this.variableList[i]; i++) {
     if (Blockly.Names.equals(varname, name)) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+/**
+ * Walk the workspace and update the list of locations to only contain ones in
+ * use on the workspace.  Use when loading new workspaces from disk.
+ * @param {boolean} clearList True if the old variable list should be cleared.
+ */
+Blockly.Workspace.prototype.updateLocationList = function(clearList) {
+  // TODO: Sort
+  if (!this.isFlyout) {
+    // Update the list in place so that the flyout's references stay correct.
+    if (clearList) {
+      this.locationList.length = 0;
+    }
+    var allLocations = Blockly.Locations.allUsedLocations(this);
+    for (var i = 0; i < allLocations.length; i++) {
+      this.createLocation(allLocations[i]);
+    }
+  }
+};
+
+/**
+ * Rename a location by updating its name in the location list.
+ * TODO: #468
+ * @param {string} oldName location to rename.
+ * @param {string} newName New location name.
+ */
+Blockly.Workspace.prototype.renameLocation = function(oldName, newName, x, y, z) {
+  // Find the old name in the list.
+  var locationIndex = this.locationIndexOf(oldName);
+  var newLocationIndex = this.locationIndexOf(newName);
+
+  // check to see if anything has been edited, if not, just return
+  if (this.locationList[newLocationIndex].name == newName &&
+      this.locationList[newLocationIndex].x === x &&
+      this.locationList[newLocationIndex].y === y && 
+      this.locationList[newLocationIndex].z === z) {
+    return;
+  }
+
+  // We might be renaming to an existing name but with different case.  If so,
+  // we will also update all of the blocks using the new name to have the
+  // correct case.
+  if (newLocationIndex != -1 &&
+      this.locationList[newLocationIndex].name != newName) {
+    var oldCase = this.locationList[newLocationIndex].name;
+  }
+
+  Blockly.Events.setGroup(true);
+  var blocks = this.getAllBlocks();
+  // Iterate through every block.
+  for (var i = 0; i < blocks.length; i++) {
+    blocks[i].renameLoc(oldName, newName);
+    if (oldCase) {
+      blocks[i].renameLoc(oldCase, newName);
+    }
+  }
+  Blockly.Events.setGroup(false);
+
+
+  if (locationIndex == newLocationIndex ||
+      locationIndex != -1 && newLocationIndex == -1) {
+    // Only changing case, or renaming to a completely novel name.
+    this.locationList[locationIndex] = new Blockly.Location(newName, x, y, z);
+  } else if (locationIndex != -1 && newLocationIndex != -1) {
+    // Renaming one existing variable to another existing variable.
+    // The case might have changed, so we update the destination ID.
+    this.locationList[newLocationIndex] = new Blockly.Location(newName, x, y, z);
+    this.locationList.splice(locationIndex, 1);
+  } else {
+    this.locationList.push(new Blockly.Location(newName, x, y, z));
+    console.log('Tried to rename an non-existent variable.');
+  }
+};
+
+/**
+ * Create a variable with the given name.
+ * TODO: #468
+ * @param {string} name The new variable's name.
+ */
+Blockly.Workspace.prototype.createLocation = function(name, x, y, z) {
+  var locs = this.locationList.filter(function(obj){return obj.name === name;});
+  if (locs.length == 0) {
+    this.locationList.push(new Blockly.Location(name, x, y, z));
+  }
+};
+
+/**
+ * Find all the uses of a named variable.
+ * @param {string} name Name of variable.
+ * @return {!Array.<!Blockly.Block>} Array of block usages.
+ */
+Blockly.Workspace.prototype.getLocationUses = function(name) {
+  var uses = [];
+  var blocks = this.getAllBlocks();
+  // Iterate through every block and check the name.
+  for (var i = 0; i < blocks.length; i++) {
+    var blockLocations = blocks[i].getLocs();
+    if (blockLocations) {
+      for (var j = 0; j < blockLocations.length; j++) {
+        var locName = blockLocations[j];
+        // Variable name may be null if the block is only half-built.
+        if (locName && Blockly.Names.equals(locName, name)) {
+          uses.push(blocks[i]);
+        }
+      }
+    }
+  }
+  return uses;
+};
+
+/**
+ * Delete a variables and all of its uses from this workspace.
+ * @param {string} name Name of variable to delete.
+ */
+Blockly.Workspace.prototype.deleteLocation = function(name) {
+  var locationIndex = this.locationIndexOf(name);
+  if (locationIndex == -1) {
+    return;
+  }
+  // Check whether this variable is a function parameter before deleting.
+  var uses = this.getVariableUses(name);
+  for (var i = 0, block; block = uses[i]; i++) {
+    if (block.type == 'procedures_defnoreturn' ||
+      block.type == 'procedures_defreturn') {
+      var procedureName = block.getFieldValue('NAME');
+      Blockly.alert(
+          Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE.
+          replace('%1', name).
+          replace('%2', procedureName));
+      return;
+    }
+  }
+
+  var workspace = this;
+  function doDeletion() {
+    Blockly.Events.setGroup(true);
+    for (var i = 0; i < uses.length; i++) {
+      uses[i].dispose(true, false);
+    }
+    Blockly.Events.setGroup(false);
+    workspace.variableList.splice(locationIndex, 1);
+  }
+  if (uses.length > 1) {
+    // Confirm before deleting multiple blocks.
+    Blockly.confirm(
+        Blockly.Msg.DELETE_VARIABLE_CONFIRMATION.replace('%1', uses.length).
+        replace('%2', name),
+        function(ok) {
+          if (ok) {
+            doDeletion();
+          }
+        });
+  } else {
+    // No confirmation necessary for a single block.
+    doDeletion();
+  }
+};
+
+/**
+ * Check whether a variable exists with the given name.  The check is
+ * case-insensitive.
+ * @param {string} name The name to check for.
+ * @return {number} The index of the name in the variable list, or -1 if it is
+ *     not present.
+ */
+Blockly.Workspace.prototype.locationIndexOf = function(name) {
+  for (var i = 0, locname; locname = this.locationList[i]; i++) {
+    if (Blockly.Names.equals(locname.name, name)) {
       return i;
     }
   }

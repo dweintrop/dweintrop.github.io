@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>RoBlockly: A Blockly Library for ABB's Roberta</title>
-  <script src="../../blockly_compressed.js"></script>
+  <script src="../../blockly_uncompressed.js"></script>
   <script src="../../blocks_compressed.js"></script>
   <script src="../../msg/js/en.js"></script>
   
@@ -11,6 +11,8 @@
   <script src="robotArm.js"></script>
   <script src="robotHand.js"></script>
   <script src="robotRecipe.js"></script>
+  <script src="locations.js"></script>
+  <script src="field_location.js"></script>
 
 
 
@@ -40,21 +42,21 @@
           <statement name="steps">
             <block type="configure_hand">
               <next>
-                <block type="open_hand">
+                <block type="open_close_hand">
                   <next>
                     <block type="move_to_location">
+                      <field name="move_type">direct</field>
+                      <field name="dest">pick_up_location</field>
                       <next>
-                        <block type="close_hand">
+                        <block type="pick_up_release">
                           <next>
-                            <block type="pick_up">
+                            <block type="move_to_location">
+                              <field name="dest">release_location</field>
                               <next>
-                                <block type="move_to_location">
+                                <block type="pick_up_release">
+                                  <field name="pick_up_release">release</field>
                                   <next>
-                                    <block type="drop">
-                                      <next>
-                                        <block type="go_home"></block>
-                                      </next>
-                                    </block>
+                                    <block type="move_to_location"></block>
                                   </next>
                                 </block>
                               </next>
@@ -72,36 +74,73 @@
         <block type="button_press">
           <field name="NAME">Button Press</field>
           <statement name="steps">
-            <block type="close_hand">
+            <block type="open_close_hand">
+              <field name="open_close_hand">close</field>
               <next>
-                <block type="move_to_location">
+                <block type="change_arm_by">
+                  <value name="dist">
+                    <shadow type="math_number">
+                      <field name="NUM">20</field>
+                    </shadow>
+                  </value>
                   <next>
-                    <block type="move_to_location"></block>
+                    <block type="change_arm_by">
+                      <value name="dist">
+                        <shadow type="math_number">
+                          <field name="NUM">-20</field>
+                        </shadow>
+                      </value>
+                    </block>
                   </next>
                 </block>
-              </next>
+              </next>   
             </block>
           </statement>
         </block>
       </category>
       <category name="Robot Arm" colour="#a5a55b">
         <block type="move_to_location"></block>
-        <block type="move_to_dropdowns"></block>
-        <block type="go_home"></block>
+        <block type="move_to_xyz">
+          <value name="x">
+            <shadow type="math_number">
+              <field name="NUM">180</field>
+            </shadow>
+          </value>
+          <value name="y">
+            <shadow type="math_number">
+              <field name="NUM">180</field>
+            </shadow>
+          </value>
+          <value name="z">
+            <shadow type="math_number">
+              <field name="NUM">180</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="change_arm_by">
+          <value name="dist">
+            <shadow type="math_number">
+              <field name="NUM">100</field>
+            </shadow>
+          </value>
+        </block>
+        <!-- <block type="move_to_location"></block> -->
+        <!-- <block type="go_home"></block> -->
       </category>
+      <category name="Robot Locations" colour="#A65C81" custom="LOCATION"></category>
       <category name="Robot Hand" colour="#5b6da5">
+        <block type="define_obj"></block>
+        <block type="edit_obj"></block>
         <block type="configure_hand"></block>
-        <block type="open_hand"></block>
-        <block type="close_hand"></block>
-        <block type="pick_up"></block>
-        <block type="drop"></block>
+        <block type="open_close_hand"></block>
+        <block type="pick_up_release"></block>
       </category>
       <sep></sep>
       <category name="Logic" colour="#5C81A6">
         <block type="controls_if"></block>
-        <block type="wait">
+        <!-- <block type="wait">
           <field name="sec">60</field>
-        </block>
+        </block> -->
         <block type="logic_compare">
           <field name="OP">EQ</field>
         </block>

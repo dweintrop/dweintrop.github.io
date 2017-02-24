@@ -854,6 +854,20 @@ Blockly.WorkspaceSvg.prototype.createVariable = function(name) {
 };
 
 /**
+ * Create a new location with the given name.  Update the flyout to show the new
+ *     location immediately.
+ * TODO: #468
+ * @param {string} name The new location's name.
+ */
+Blockly.WorkspaceSvg.prototype.createLocation = function(name) {
+  Blockly.WorkspaceSvg.superClass_.createLocation.call(this, name);
+  // Don't refresh the toolbox if there's a drag in progress.
+  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_) {
+    this.toolbox_.refreshSelection();
+  }
+};
+
+/**
  * Make a list of all the delete areas for this workspace.
  */
 Blockly.WorkspaceSvg.prototype.recordDeleteAreas = function() {
