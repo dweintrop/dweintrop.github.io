@@ -21,6 +21,11 @@ Blockly.Blocks['move_to_location'] = {
     this.setColour(60);
     this.setTooltip('');
     this.setHelpUrl('');
+  }, 
+  onchange: function(changeEvent) {
+    if (Blockly.getMainWorkspace().locationIndexOf(this.inputList[0].fieldRow[3].getValue()) == -1) {
+      this.setWarningText('Location not yet configured.');
+    }
   }
 };
 
@@ -209,33 +214,6 @@ Blockly.Blocks['change_arm_by'] = {
       "previousStatement": null,
       "nextStatement": null,
     });
-  }
-};
-
-
-Blockly.Blocks['location_details'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("Define Location");
-    this.appendValueInput("locale_name")
-        .setCheck("String")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Name:");
-    this.appendValueInput("x")
-        .setCheck("Number")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("X:");
-    this.appendValueInput("y")
-        .setCheck("Number")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Y:");
-    this.appendValueInput("z")
-        .setCheck("Number")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Z:");
-    this.setColour(180);
-    this.setTooltip('');
-    this.setHelpUrl('');
   }
 };
 

@@ -779,7 +779,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         var curButton = new Blockly.FlyoutButton(this.workspace_,
             this.targetWorkspace_, xml, isLabel);
         contents.push({type: 'button', button: curButton});
-        gaps.push(default_gap);
+        var gap = parseInt(xml.getAttribute('gap'), 10);
+        gaps.push(isNaN(gap) ? default_gap : gap);
       }
     }
   }
@@ -870,7 +871,7 @@ Blockly.Flyout.prototype.layout_ = function(contents, gaps) {
     } else if (item.type == 'button') {
       var button = item.button;
       var buttonSvg = button.createDom();
-      button.moveTo(cursorX, cursorY);
+      button.moveTo(cursorX + (button.indent_ ? 8 : 0), cursorY);
       button.show();
       Blockly.bindEventWithChecks_(buttonSvg, 'mouseup', button,
           button.onMouseUp);

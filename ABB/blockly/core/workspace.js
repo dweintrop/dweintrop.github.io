@@ -395,10 +395,10 @@ Blockly.Workspace.prototype.renameLocation = function(oldName, newName, x, y, z)
   var newLocationIndex = this.locationIndexOf(newName);
 
   // check to see if anything has been edited, if not, just return
-  if (this.locationList[newLocationIndex].name == newName &&
-      this.locationList[newLocationIndex].x === x &&
-      this.locationList[newLocationIndex].y === y && 
-      this.locationList[newLocationIndex].z === z) {
+  if (oldName == newName &&
+      this.locationList[locationIndex].x === x &&
+      this.locationList[locationIndex].y === y && 
+      this.locationList[locationIndex].z === z) {
     return;
   }
 

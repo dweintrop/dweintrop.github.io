@@ -96,6 +96,20 @@ Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
    * @private
    */
   this.cssClass_ = xml.getAttribute('web-class') || null;
+
+  /**
+   * If specified, the button/label is indented.
+   * @type {?string}
+   * @private
+   */
+  this.indent_ = xml.getAttribute('indent') || false;
+
+  /**
+   * Whether on not this button should display the gear, pencil, and red x
+   * @type {boolean}
+   * @private
+   */
+  this.hasEditPalette_= xml.getAttribute('editPalette') || false;
 };
 
 /**
@@ -155,6 +169,55 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   if (!this.isLabel_) {
     shadow.setAttribute('width', this.width);
     shadow.setAttribute('height', this.height);
+  } else {
+    
+    // kind of clunky way to render edit Palette
+    if (this.hasEditPalette_) {
+
+      var gear = Blockly.utils.createSvgElement('g', {}, this.svgGroup_);
+      // Square with rounded corners.
+      Blockly.utils.createSvgElement('rect',
+          {'class': 'blocklyIconShape',
+           'rx': '4', 'ry': '4',
+           'height': '16', 'width': '16',
+            'x': this.width},
+           gear);
+      // Gear teeth.
+      Blockly.utils.createSvgElement('path',
+          {'class': 'blocklyIconSymbol',
+           'd': 'm' + (4.203 + this.width) + ',7.296 0,1.368 -0.92,0.677 -0.11,0.41 0.9,1.559 0.41,0.11 1.043,-0.457 1.187,0.683 0.127,1.134 0.3,0.3 1.8,0 0.3,-0.299 0.127,-1.138 1.185,-0.682 1.046,0.458 0.409,-0.11 0.9,-1.559 -0.11,-0.41 -0.92,-0.677 0,-1.366 0.92,-0.677 0.11,-0.41 -0.9,-1.559 -0.409,-0.109 -1.046,0.458 -1.185,-0.682 -0.127,-1.138 -0.3,-0.299 -1.8,0 -0.3,0.3 -0.126,1.135 -1.187,0.682 -1.043,-0.457 -0.41,0.11 -0.899,1.559 0.108,0.409z'},
+           gear);
+      // Axle hole.
+      Blockly.utils.createSvgElement('circle',
+          {'class': 'blocklyIconShape', 'r': '2.7', 'cx': this.width + 8, 'cy': '8',
+            'x': this.width},
+           gear);
+      gear.setAttribute('style', 'cursor:pointer;');
+      gear.setAttribute('onclick', 'alert("Put RobotStudio hook here!")');
+
+      // var pencil = Blockly.utils.createSvgElement('g', {}, this.svgGroup_);
+      // // Square with rounded corners.
+      // Blockly.utils.createSvgElement('rect',
+      //     {'class': 'blocklyIconShape',
+      //      'rx': '4', 'ry': '4',
+      //      'height': '16', 'width': '16',
+      //       'x': this.width + 20},
+      //      pencil);
+      // // Blockly.utils.createSvgElement('path',
+      // //     {'class': 'blocklyIconSymbol',
+      // //       'style':'transform:scale(.6)',
+      // //      'd': 'm' + (18.363 + this.width + 70) +' 8.464l1.433 1.431-12.67 12.669-7.125 1.436 1.439-7.127 12.665-12.668 1.431 1.431-12.255 12.224-.726 3.584 3.584-.723 12.224-12.257zm-.056-8.464l-2.815 2.817 5.691 5.692 2.817-2.821-5.693-5.688zm-12.318 18.718l11.313-11.316-.705-.707-11.313 11.314.705.709z'},
+      // //      pencil);
+      // Blockly.utils.createSvgElement('image',
+      //   {'href':'http://www.free-icons-download.net/images/pencil-icon-23104.png',
+      //   'height':'14', 'width':'14', 'x':this.width + 20},
+      //   pencil)
+      // pencil.setAttribute('height', '16');
+      // pencil.setAttribute('width', '16');
+      // pencil.setAttribute('style', 'cursor:pointer;');
+      // pencil.setAttribute('onclick', 'alert("Put rename hook here!")');
+
+    }
   }
   rect.setAttribute('width', this.width);
   rect.setAttribute('height', this.height);

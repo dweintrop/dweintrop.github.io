@@ -33,6 +33,11 @@ goog.inherits(Blockly.FieldLocation, Blockly.FieldDropdown);
  * @type {number}
  */
 Blockly.FieldLocation.prototype.renameLocItemIndex_ = -1;
+/**
+ * The menu item index for the configure location option.
+ * @type {number}
+ */
+Blockly.FieldLocation.prototype.configureLocItemIndex_ = -1;
 
 /**
  * The menu item index for the delete location option.
@@ -58,12 +63,15 @@ Blockly.FieldLocation.prototype.init = function() {
             this.sourceBlock_.workspace;
     this.setValue(Blockly.Location.generateUniqueName(workspace));
   }
-  // If the selected location doesn't exist yet, create it.
-  // For instance, some blocks in the toolbox have location dropdowns filled
-  // in by default.
-  if (!this.sourceBlock_.isInFlyout) {
-    this.sourceBlock_.workspace.createLocation(this.getValue());
-  }
+
+
+  // // If the selected location doesn't exist yet, create it.
+  // // For instance, some blocks in the toolbox have location dropdowns filled
+  // // in by default.
+  // if (!this.sourceBlock_.isInFlyout) {
+  //   this.sourceBlock_.workspace.createLocation(this.getValue());
+  // }
+
 };
 
 /**
@@ -124,10 +132,13 @@ Blockly.FieldLocation.dropdownCreate = function() {
   // locationList.sort(goog.string.caseInsensitiveCompare);
 
   this.renameLocItemIndex_ = locationList.length;
-  locationList.push("Add new location...");
+  locationList.push("Rename location");
+
+  this.configureLocItemIndex_ = locationList.length;
+  locationList.push("Configure location");
 
   this.deleteLocItemIndex_ = locationList.length;
-  locationList.push("Delete the '%1' location".replace('%1', name));
+  locationList.push("Delete the '%1' location".replace('%1', this.getText()));
   // Variables are not language-specific, use the name as both the user-facing
   // text and the internal representation.
   var options = [];
@@ -151,7 +162,7 @@ Blockly.FieldLocation.prototype.onItemSelected = function(menu, menuItem) {
     var workspace = this.sourceBlock_.workspace;
     if (this.renameLocItemIndex_ >= 0 &&
         menu.getChildAt(this.renameLocItemIndex_) === menuItem) {
-      // Rename variable.
+      // Rename location.
       var oldName = this.getText();
       Blockly.hideChaff();
       Blockly.Locations.promptName(
@@ -162,15 +173,32 @@ Blockly.FieldLocation.prototype.onItemSelected = function(menu, menuItem) {
             }
           });
       return;
+    }  else if (this.configureLocItemIndex_ >=0 &&
+        menu.getChildAt(this.configureLocItemIndex_) === menuItem) {
+        alert('Put RobotStudio hook here');
+        
+        //if location is new - register it
+        if (workspace.locationIndexOf(this.getText() == -1) ) {
+          // register new location & remove warning
+          workspace.createLocation(this.getText());
+          if (this.sourceBlock_.warning){
+            this.sourceBlock_.warning.dispose();
+            this.sourceBlock_.render();
+          }
+        }
+        return;
     } else if (this.deleteLocItemIndex_ >= 0 &&
         menu.getChildAt(this.deleteLocItemIndex_) === menuItem) {
-      // Delete variable.
+      // Delete location.
       workspace.deleteLocation(this.getText());
       return;
     }
-
     // Call any validation function, and allow it to override.
     itemText = this.callValidator(itemText);
+    if (this.sourceBlock_.warning){
+      this.sourceBlock_.warning.dispose();
+      this.sourceBlock_.render();
+    }
   }
   if (itemText !== null) {
     this.setValue(itemText);

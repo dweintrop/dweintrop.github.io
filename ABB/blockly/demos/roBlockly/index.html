@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <META http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta charset="utf-8">
   <title>RoBlockly: A Blockly Library for ABB's Roberta</title>
   <script src="../../blockly_uncompressed.js"></script>
@@ -98,10 +99,10 @@
           </statement>
         </block>
       </category>
-      <category name="Robot Arm" colour="#a5a55b">
+     <!--  <category name="Robot Arm" colour="#a5a55b">
         <block type="move_to_location"></block>
         
-<!--         <block type="move_to_xyz">
+        <block type="move_to_xyz">
           <value name="x">
             <shadow type="math_number">
               <field name="NUM">180</field>
@@ -117,8 +118,8 @@
               <field name="NUM">180</field>
             </shadow>
           </value>
-        </block> -->
-        
+        </block>
+
         <block type="change_arm_by">
           <value name="dist">
             <shadow type="math_number">
@@ -126,10 +127,10 @@
             </shadow>
           </value>
         </block>
-        <!-- <block type="move_to_location"></block> -->
-        <!-- <block type="go_home"></block> -->
-      </category>
-      <category name="Robot Locations" colour="#A65C81" custom="LOCATION"></category>
+        <block type="move_to_location"></block>
+        <block type="go_home"></block>
+      </category> -->
+      <category name="Robot Arm" colour="#A65C81" custom="LOCATION"></category>
       <category name="Robot Hand" colour="#5b6da5">
         <block type="define_obj"></block>
         <block type="edit_obj"></block>
@@ -302,6 +303,17 @@
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
   </script>
+
+  <style>
+  .locations-title>.blocklyFlyoutLabelText {
+    font-style: bold;
+    fill: blue;
+  }
+  .locations-list>.blocklyFlyoutLabelText {
+    font-style: italic;
+    fill: darkblue;
+  }
+  </style>
 
 </body>
 </html>

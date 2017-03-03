@@ -36,6 +36,7 @@ Blockly.Blocks['locations_config'] = {
         "location"), 'LOC');
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
     this.contextMenuMsg_ = "Create 'set %1'";
+    this.setMutator(new Blockly.Mutator(['']));
   },
   // contextMenuType_: 'locations_set',
   /**
@@ -53,6 +54,78 @@ Blockly.Blocks['locations_config'] = {
     xmlBlock.setAttribute('type', this.contextMenuType_);
     option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
     options.push(option);
+  },
+  decompose: function(workspace) {
+    var configBlock = workspace.newBlock('location_details');
+    configBlock.initSvg();
+    var nameInp = workspace.newBlock('text');
+    nameInp.initSvg();
+    var incomingLocName = this.getFieldValue("LOC");
+    nameInp.getField("TEXT").setValue(incomingLocName);
+    configBlock.getInput("locale_name").connection.connect(nameInp.outputConnection);
+
+    var locs = workspace.locationList.filter(function(obj){return obj.name === incomingLocName;});
+    var x = 100, y = 150, z = 200;
+    if (locs.length == 1) {
+      x = locs[0].x; y = locs[0].y; z = locs[0].z;
+    }
+
+    var xInp = workspace.newBlock('math_number');
+    xInp.initSvg();
+    xInp.getField("NUM").setValue(x);
+    configBlock.getInput("x").connection.connect(xInp.outputConnection);
+    var yInp = workspace.newBlock('math_number');
+    yInp.getField("NUM").setValue(y);
+    yInp.initSvg();
+    configBlock.getInput("y").connection.connect(yInp.outputConnection);
+    var zInp = workspace.newBlock('math_number');
+    zInp.getField("NUM").setValue(z);
+    zInp.initSvg();
+    configBlock.getInput("z").connection.connect(zInp.outputConnection);
+    return configBlock;
+  }, 
+  compose: function(containerBlock) {
+    var name = containerBlock.getChildren()[0].getFieldValue("TEXT");
+    var x = containerBlock.getChildren()[1].getFieldValue("NUM");
+    var y = containerBlock.getChildren()[2].getFieldValue("NUM");
+    var z = containerBlock.getChildren()[3].getFieldValue("NUM");
+    Blockly.getMainWorkspace().renameLocation(this.getFieldValue("LOC"), name, x, y, z);
+  },
+  mutationToDom: function(workspace) {
+    var container = document.createElement('mutation');
+    var xInput = (this.getFieldValue('x') == this.getInput('x'));
+    container.setAttribute('x', xInput);
+    return container;
+    
+  },
+  domToMutation: function(container) {
+    this.x = container.getAttribute('x');
+  }
+};
+
+Blockly.Blocks['location_details'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Define Location");
+    this.appendValueInput("locale_name")
+        .setCheck("String")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Name:");
+    this.appendValueInput("x")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("X:");
+    this.appendValueInput("y")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Y:");
+    this.appendValueInput("z")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Z:");
+    this.setColour(180);
+    this.setTooltip('');
+    this.setHelpUrl('');
   }
 };
 
@@ -128,31 +201,61 @@ Blockly.Locations.flyoutCategory = function(workspace) {
 
   var block = goog.dom.createDom('block');
   block.setAttribute('type', 'move_to_location');
-  if (Blockly.Blocks['math_change']) {
-    block.setAttribute('gap', 8);
-  } else {
-    block.setAttribute('gap', 24);
-  }
+  block.setAttribute('gap', 16);
   xmlList.push(block);
 
-  var block = goog.dom.createDom('block');
-  block.setAttribute('type', 'configure_location');
-  if (Blockly.Blocks['math_change']) {
-    block.setAttribute('gap', 8);
-  } else {
-    block.setAttribute('gap', 24);
-  }
-  xmlList.push(block);
+        // <block type="change_arm_by">
+        //   <value name="dist">
+        //     <shadow type="math_number">
+        //       <field name="NUM">100</field>
+        //     </shadow>
+        //   </value>
+        // </block>
+
+  var change_arm_by = goog.dom.createDom('block');
+  change_arm_by.setAttribute('type', 'change_arm_by');
+  change_arm_by.setAttribute('gap', 16);
+
+  var value = goog.dom.createDom('value');
+  value.setAttribute('name', 'dist');
+  var shadow = goog.dom.createDom('shadow');
+  shadow.setAttribute('type', 'math_number');
+  var numInp = goog.dom.createDom('field');
+  numInp.setAttribute('name', 'NUM');
+  numInp.innerHTML = '100';
+  shadow.appendChild(numInp);
+  value.appendChild(shadow)
+  change_arm_by.appendChild(value);
+  xmlList.push(change_arm_by);
+
+
+  /////////////////////////
+  // add Location buttons/names
+  /////////////////////////
 
   var button = goog.dom.createDom('button');
-  button.setAttribute('text', 'Create Location...');
+  button.setAttribute('text', 'Create New Location');
   button.setAttribute('callbackKey', 'CREATE_LOCATION');
-
+  button.setAttribute('gap', 10);
   workspace.registerButtonCallback('CREATE_LOCATION', function(button) {
     Blockly.Locations.createLocation(button.getTargetWorkspace());
   });
 
   xmlList.push(button);
+
+  // Hide configure location button as we are going to try and make labels into links
+  // var configButton = goog.dom.createDom('button');
+  // configButton.setAttribute('text', 'Configure Location:');
+  // configButton.setAttribute('gap', 16);
+  // configButton.setAttribute('callbackKey', 'CONFIGURE_LOCATION');
+  // workspace.registerButtonCallback('CONFIGURE_LOCATION', function(button) {
+  //   alert('Put RobotStudio hook here');
+  // });
+  // xmlList.push(configButton);
+
+
+  var dropdown = goog.dom.createDom('dropdown');
+  xmlList.push(dropdown);
 
   if (locationList.length > 0) {
     // if (Blockly.Blocks['location_set']) {
@@ -172,21 +275,34 @@ Blockly.Locations.flyoutCategory = function(workspace) {
     //   xmlList.push(block);
     // }
 
+
+    if (!locationList.empty) {
+      var locationLabel = goog.dom.createDom('label');
+      locationLabel.setAttribute('text', 'Defined Locations:');
+      locationLabel.setAttribute('web-class', 'locations-title');
+      locationLabel.setAttribute('gap', 4);
+      xmlList.push(locationLabel);
+    }
+
     for (var i = 0; i < locationList.length; i++) {
-      if (Blockly.Blocks['locations_config']) {
-        // <block type="variables_get" gap="8">
-        //   <field name="VAR">item</field>
-        // </block>
-        var block = goog.dom.createDom('block');
-        block.setAttribute('type', 'locations_config');
-        if (Blockly.Blocks['locations_set']) {
-          block.setAttribute('gap', 8);
-        }
-        var field = goog.dom.createDom('field', null, locationList[i].name);
-        field.setAttribute('name', 'LOC');
-        block.appendChild(field);
-        xmlList.push(block);
-      }
+      var locationName = goog.dom.createDom('label');
+      locationName.setAttribute('text', '    ' + locationList[i].name);
+      locationName.setAttribute('web-class', 'locations-list');
+      locationName.setAttribute('indent', 'true');
+      locationName.setAttribute('editPalette', 'true');
+      locationName.setAttribute('gap', 4);
+      xmlList.push(locationName);
+      // The below code adds each location as a block (a la variables) 
+      //
+      // var block = goog.dom.createDom('block');
+      // block.setAttribute('type', 'locations_config');
+      // if (Blockly.Blocks['locations_set']) {
+      //   block.setAttribute('gap', 4);
+      // }
+      // var field = goog.dom.createDom('field', null, locationList[i].name);
+      // field.setAttribute('name', 'LOC');
+      // block.appendChild(field);
+      // xmlList.push(block);
     }
   }
   return xmlList;
@@ -275,6 +391,9 @@ Blockly.Locations.createLocation = function(workspace, opt_callback) {
       });
   };
   promptAndCheckWithAlert('');
+
+  alert('Put RobotStudio hook here');
+
 };
 
 /**
