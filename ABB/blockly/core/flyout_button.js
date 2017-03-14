@@ -194,29 +194,52 @@ Blockly.FlyoutButton.prototype.createDom = function() {
            gear);
       gear.setAttribute('style', 'cursor:pointer;');
       gear.setAttribute('onclick', 'alert("Put RobotStudio hook here!")');
+      var gearTitle = Blockly.utils.createSvgElement('title', {}, gear);
+      gearTitle.innerHTML = 'Configure Location';
 
-      // var pencil = Blockly.utils.createSvgElement('g', {}, this.svgGroup_);
-      // // Square with rounded corners.
+      var pencil = Blockly.utils.createSvgElement('g', {}, this.svgGroup_);
+      // Square with rounded corners.
       // Blockly.utils.createSvgElement('rect',
       //     {'class': 'blocklyIconShape',
       //      'rx': '4', 'ry': '4',
       //      'height': '16', 'width': '16',
       //       'x': this.width + 20},
       //      pencil);
-      // // Blockly.utils.createSvgElement('path',
-      // //     {'class': 'blocklyIconSymbol',
-      // //       'style':'transform:scale(.6)',
-      // //      'd': 'm' + (18.363 + this.width + 70) +' 8.464l1.433 1.431-12.67 12.669-7.125 1.436 1.439-7.127 12.665-12.668 1.431 1.431-12.255 12.224-.726 3.584 3.584-.723 12.224-12.257zm-.056-8.464l-2.815 2.817 5.691 5.692 2.817-2.821-5.693-5.688zm-12.318 18.718l11.313-11.316-.705-.707-11.313 11.314.705.709z'},
-      // //      pencil);
-      // Blockly.utils.createSvgElement('image',
-      //   {'href':'http://www.free-icons-download.net/images/pencil-icon-23104.png',
-      //   'height':'14', 'width':'14', 'x':this.width + 20},
-      //   pencil)
-      // pencil.setAttribute('height', '16');
-      // pencil.setAttribute('width', '16');
-      // pencil.setAttribute('style', 'cursor:pointer;');
-      // pencil.setAttribute('onclick', 'alert("Put rename hook here!")');
+      // Blockly.utils.createSvgElement('path',
+      //     {'class': 'blocklyIconSymbol',
+      //       'style':'transform:scale(.6)',
+      //      'd': 'm' + (18.363 + this.width + 70) +' 8.464l1.433 1.431-12.67 12.669-7.125 1.436 1.439-7.127 12.665-12.668 1.431 1.431-12.255 12.224-.726 3.584 3.584-.723 12.224-12.257zm-.056-8.464l-2.815 2.817 5.691 5.692 2.817-2.821-5.693-5.688zm-12.318 18.718l11.313-11.316-.705-.707-11.313 11.314.705.709z'},
+      //      pencil);
+      Blockly.utils.createSvgElement('image',
+        {'href':'pencil2.png',
+        'height':'16', 'width':'16', 'x':this.width + 20},
+        pencil)
+      pencil.setAttribute('height', '16');
+      pencil.setAttribute('width', '16');
+      pencil.setAttribute('style', 'cursor:pointer;');
+      pencil.setAttribute('onclick', 'Blockly.Locations.Rename("'+this.text_.trim()+'")');
+      var pencilTitle = Blockly.utils.createSvgElement('title', {}, pencil);
+      pencilTitle.innerHTML = 'Rename Location';
 
+
+      var garbage = Blockly.utils.createSvgElement('g', {}, this.svgGroup_);
+      // Square with rounded corners.
+      // Blockly.utils.createSvgElement('rect',
+      //     {'class': 'blocklyIconShape',
+      //      'rx': '4', 'ry': '4',
+      //      'height': '16', 'width': '16',
+      //       'x': this.width + 40},
+      //      garbage);
+      Blockly.utils.createSvgElement('image',
+        {'href':'red_x.png',
+        'height':'14', 'width':'14', 'x':this.width + 38, 'y': 1},
+        garbage)
+      garbage.setAttribute('height', '16');
+      garbage.setAttribute('width', '16');
+      garbage.setAttribute('style', 'cursor:pointer;');
+      garbage.setAttribute('onclick', 'Blockly.mainWorkspace.deleteLocation("'+this.text_.trim()+'");Blockly.mainWorkspace.toolbox_.refreshSelection();');
+      var garbageTitle = Blockly.utils.createSvgElement('title', {}, garbage);
+      garbageTitle.innerHTML = 'Delete Location';
     }
   }
   rect.setAttribute('width', this.width);

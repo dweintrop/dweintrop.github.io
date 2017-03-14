@@ -474,7 +474,7 @@ Blockly.Workspace.prototype.getLocationUses = function(name) {
 };
 
 /**
- * Delete a variables and all of its uses from this workspace.
+ * Delete a location and all of its uses from this workspace.
  * @param {string} name Name of variable to delete.
  */
 Blockly.Workspace.prototype.deleteLocation = function(name) {
@@ -503,22 +503,16 @@ Blockly.Workspace.prototype.deleteLocation = function(name) {
       uses[i].dispose(true, false);
     }
     Blockly.Events.setGroup(false);
-    workspace.variableList.splice(locationIndex, 1);
+    workspace.locationList.splice(locationIndex, 1);
+
   }
-  if (uses.length > 1) {
-    // Confirm before deleting multiple blocks.
-    Blockly.confirm(
-        Blockly.Msg.DELETE_VARIABLE_CONFIRMATION.replace('%1', uses.length).
-        replace('%2', name),
-        function(ok) {
-          if (ok) {
-            doDeletion();
-          }
-        });
-  } else {
-    // No confirmation necessary for a single block.
-    doDeletion();
-  }
+  
+  Blockly.confirm("Are you sure you want to delete Location " + name + "?",
+    function(ok) {
+      if (ok) {
+        doDeletion();
+      }
+    });
 };
 
 /**

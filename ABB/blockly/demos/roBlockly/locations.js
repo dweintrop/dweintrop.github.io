@@ -393,7 +393,7 @@ Blockly.Locations.createLocation = function(workspace, opt_callback) {
   promptAndCheckWithAlert('');
 
   alert('Put RobotStudio hook here');
-
+  // window.external.Test('New location created!');
 };
 
 /**
@@ -418,3 +418,14 @@ Blockly.Locations.promptName = function(promptText, defaultText, callback) {
     callback(newLoc);
   });
 };
+
+Blockly.Locations.Rename = function(oldName) {
+  Blockly.Locations.promptName(
+  "Rename all '%1' locations to:".replace('%1', oldName), oldName,
+  function(newName) {
+    if (newName) {
+      Blockly.mainWorkspace.renameLocation(oldName, newName);
+      Blockly.mainWorkspace.toolbox_.refreshSelection();
+    }
+  });
+}

@@ -165,13 +165,7 @@ Blockly.FieldLocation.prototype.onItemSelected = function(menu, menuItem) {
       // Rename location.
       var oldName = this.getText();
       Blockly.hideChaff();
-      Blockly.Locations.promptName(
-          "Rename all '%1' locations to:".replace('%1', oldName), oldName,
-          function(newName) {
-            if (newName) {
-              workspace.renameLocation(oldName, newName);
-            }
-          });
+      Blockly.Locations.Rename(oldName);
       return;
     }  else if (this.configureLocItemIndex_ >=0 &&
         menu.getChildAt(this.configureLocItemIndex_) === menuItem) {

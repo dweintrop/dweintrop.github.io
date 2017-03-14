@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <META http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -14,7 +14,8 @@
   <script src="robotRecipe.js"></script>
   <script src="locations.js"></script>
   <script src="field_location.js"></script>
-
+  <script src="generators/rapid.js"></script>
+  <script src="generators/rapid/robotArm.js"></script>
 
 
   <style>
@@ -33,6 +34,7 @@
     <a href="../index.html">Demos</a> &gt; RoBlockly</h1>
 
   <p>This is a demo site a Blockly programming interface for ABB's Roberta Robot.</p>
+  <button onclick="showCode()">Generate RAPID</button>
 
   <div id="blocklyDiv" style="height: 600px; width: 1200px;"></div>
 
@@ -301,7 +303,22 @@
   <script>
     var workspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
+        toolbox: document.getElementById('toolbox')
+        });
+
+    function undo() {
+        workspace.undo(false);
+    }
+
+    function redo() {
+        workspace.undo(true);
+    }
+
+    function showCode() {
+      alert(Blockly.Rapid.workspaceToCode(workspace));
+      //alert("Hello World!");
+    }
+    
   </script>
 
   <style>
