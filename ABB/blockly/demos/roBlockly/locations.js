@@ -377,6 +377,7 @@ Blockly.Locations.createLocation = function(workspace, opt_callback) {
                 });
           } else {
             workspace.createLocation(text);
+            window.external.DefineTarget(text);
             if (opt_callback) {
               opt_callback(text);
             }
@@ -391,8 +392,8 @@ Blockly.Locations.createLocation = function(workspace, opt_callback) {
   };
   promptAndCheckWithAlert('');
 
-  alert('Put RobotStudio hook here');
-  // window.external.Test('New location created!');
+  //alert('Put RobotStudio hook here');
+  //window.external.Test('New location created!');
 };
 
 /**

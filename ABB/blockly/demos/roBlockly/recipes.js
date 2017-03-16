@@ -22,7 +22,7 @@ Blockly.Blocks['picknplace'] = {
         .appendField("to")
         .appendField(nameField, 'NAME')
         .appendField('', 'PARAMS');
-    this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    this.setMutator(new Blockly.Mutator(['recipes_mutatorarg']));
     // if ((this.workspace.options.comments ||
     //      (this.workspace.options.parentWorkspace &&
     //       this.workspace.options.parentWorkspace.options.comments)) &&
@@ -144,7 +144,7 @@ Blockly.Blocks['picknplace'] = {
    * @this Blockly.Block
    */
   decompose: function(workspace) {
-    var containerBlock = workspace.newBlock('procedures_mutatorcontainer');
+    var containerBlock = workspace.newBlock('recipes_mutatorcontainer');
     containerBlock.initSvg();
 
     // Check/uncheck the allow statement box.
@@ -158,7 +158,7 @@ Blockly.Blocks['picknplace'] = {
     // Parameter list.
     var connection = containerBlock.getInput('STACK').connection;
     for (var i = 0; i < this.arguments_.length; i++) {
-      var paramBlock = workspace.newBlock('procedures_mutatorarg');
+      var paramBlock = workspace.newBlock('recipes_mutatorarg');
       paramBlock.initSvg();
       paramBlock.setFieldValue(this.arguments_[i], 'NAME');
       // Store the old location.
@@ -253,7 +253,7 @@ Blockly.Blocks['picknplace'] = {
       if (this.mutator.isVisible()) {
         var blocks = this.mutator.workspace_.getAllBlocks();
         for (var i = 0, block; block = blocks[i]; i++) {
-          if (block.type == 'procedures_mutatorarg' &&
+          if (block.type == 'recipes_mutatorarg' &&
               Blockly.Names.equals(oldName, block.getFieldValue('NAME'))) {
             block.setFieldValue(newName, 'NAME');
           }
@@ -623,7 +623,7 @@ Blockly.Blocks['buttonPress'] = {
         .appendField("to")
         .appendField(nameField, 'NAME')
         .appendField('', 'PARAMS');
-    this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    this.setMutator(new Blockly.Mutator(['recipes_mutatorarg']));
     // if ((this.workspace.options.comments ||
     //      (this.workspace.options.parentWorkspace &&
     //       this.workspace.options.parentWorkspace.options.comments)) &&
@@ -745,7 +745,7 @@ Blockly.Blocks['buttonPress'] = {
    * @this Blockly.Block
    */
   decompose: function(workspace) {
-    var containerBlock = workspace.newBlock('procedures_mutatorcontainer');
+    var containerBlock = workspace.newBlock('recipes_mutatorcontainer');
     containerBlock.initSvg();
 
     // Check/uncheck the allow statement box.
@@ -759,7 +759,7 @@ Blockly.Blocks['buttonPress'] = {
     // Parameter list.
     var connection = containerBlock.getInput('STACK').connection;
     for (var i = 0; i < this.arguments_.length; i++) {
-      var paramBlock = workspace.newBlock('procedures_mutatorarg');
+      var paramBlock = workspace.newBlock('recipes_mutatorarg');
       paramBlock.initSvg();
       paramBlock.setFieldValue(this.arguments_[i], 'NAME');
       // Store the old location.
@@ -854,7 +854,7 @@ Blockly.Blocks['buttonPress'] = {
       if (this.mutator.isVisible()) {
         var blocks = this.mutator.workspace_.getAllBlocks();
         for (var i = 0, block; block = blocks[i]; i++) {
-          if (block.type == 'procedures_mutatorarg' &&
+          if (block.type == 'recipes_mutatorarg' &&
               Blockly.Names.equals(oldName, block.getFieldValue('NAME'))) {
             block.setFieldValue(newName, 'NAME');
           }
@@ -899,11 +899,11 @@ Blockly.Blocks['buttonPress'] = {
       }
     }
   },
-  callType_: 'buttonpress_call'
+  callType_: 'buttonPress_call'
 };
 
 
-Blockly.Blocks['buttonpress_call'] = {
+Blockly.Blocks['buttonPress_call'] = {
   /**
    * Block for calling a pick_n_place recipe.
    * @this Blockly.Block
@@ -1212,25 +1212,25 @@ Blockly.Blocks['buttonpress_call'] = {
   defType_: 'buttonPress'
 };
 
-Blockly.Blocks['procedures_mutatorcontainer'] = {
+Blockly.Blocks['recipes_mutatorcontainer'] = {
   /**
    * Mutator block for procedure container.
    * @this Blockly.Block
    */
   init: function() {
     this.appendDummyInput()
-        .appendField(Blockly.Msg.PROCEDURES_MUTATORCONTAINER_TITLE);
+        .appendField('inputs');
     this.appendStatementInput('STACK');
     this.appendDummyInput('STATEMENT_INPUT')
-        .appendField(Blockly.Msg.PROCEDURES_ALLOW_STATEMENTS)
+        .appendField('allow statements')
         .appendField(new Blockly.FieldCheckbox('TRUE'), 'STATEMENTS');
     this.setColour(Blockly.Recipes.HUE);
-    this.setTooltip(Blockly.Msg.PROCEDURES_MUTATORCONTAINER_TOOLTIP);
+    this.setTooltip('Add, remove, or reorder inputs to this recipe.');
     this.contextMenu = false;
   }
 };
 
-Blockly.Blocks['procedures_mutatorarg'] = {
+Blockly.Blocks['recipes_mutatorarg'] = {
   /**
    * Mutator block for procedure argument.
    * @this Blockly.Block
@@ -1238,12 +1238,12 @@ Blockly.Blocks['procedures_mutatorarg'] = {
   init: function() {
     var field = new Blockly.FieldTextInput('x', this.validator_);
     this.appendDummyInput()
-        .appendField(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE)
+        .appendField('input name:')
         .appendField(field, 'NAME');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(Blockly.Recipes.HUE);
-    this.setTooltip(Blockly.Msg.PROCEDURES_MUTATORARG_TOOLTIP);
+    this.setTooltip('Add an input to the recipe.');
     this.contextMenu = false;
 
     // Create the default variable when we drag the block in from the flyout.
@@ -1302,22 +1302,25 @@ Blockly.Recipes.NAME_TYPE = 'RECIPE';
 Blockly.Recipes.allRecipes = function(root) {
   var blocks = root.getAllBlocks();
   var picknplace = [];
-  // var recipesNoReturn = [];
+  var buttonPress = [];
+  var lostRecipes = [];
   for (var i = 0; i < blocks.length; i++) {
     if (blocks[i].getRecipeDef) {
       var tuple = blocks[i].getRecipeDef();
       if (tuple) {
         if (tuple[2] == 'picknplace') {
           picknplace.push(tuple);
+        } else if (tuple[2] == 'buttonPress') {
+          buttonPress.push(tuple);
         } else {
-          recipesNoReturn.push(tuple);
+          lostRecipes.push(tuple);
         }
       }
     }
   }
-  // recipesNoReturn.sort(Blockly.Recipes.recipeTupleComparator_);
-  picknplace.sort(Blockly.Procedures.procTupleComparator_);
-  return [picknplace];
+  buttonPress.sort(Blockly.Recipes.recipeTupleComparator_);
+  picknplace.sort(Blockly.Recipes.recipeTupleComparator_);
+  return [picknplace, buttonPress];
 };
 
 /**
@@ -1421,7 +1424,7 @@ Blockly.Recipes.flyoutCategory = function(workspace) {
       var name = recipeList[i][j][0];
       var args = recipeList[i][j][1];
       var block = goog.dom.createDom('block');
-      block.setAttribute('type', 'picknplace_call');
+      block.setAttribute('type', recipeList[i][j][2] + '_call');
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
       mutation.setAttribute('name', name);
@@ -1478,7 +1481,7 @@ Blockly.Recipes.flyoutCategory = function(workspace) {
     var picknplace = goog.dom.createDom('block');
     picknplace.setAttribute('type', 'picknplace');
     picknplace.setAttribute('gap', 16);
-    var nameField = goog.dom.createDom('field', null, "do Pick and Place");
+    var nameField = goog.dom.createDom('field', null, "Pick and Place");
     nameField.setAttribute('name', 'NAME');
     picknplace.appendChild(nameField);
     var statement = goog.dom.createDom('statement');
@@ -1542,12 +1545,11 @@ Blockly.Recipes.flyoutCategory = function(workspace) {
     xmlList.push(picknplace);
   }
 
-
   if (Blockly.Blocks['buttonPress']) {
 
         // <block type="button_press">
         //   <field name="NAME">Button Press</field>
-        //   <statement name="steps">
+        //   <statement name="STACK">
         //     <block type="open_close_hand">
         //       <field name="open_close_hand">close</field>
         //       <next>
@@ -1573,18 +1575,49 @@ Blockly.Recipes.flyoutCategory = function(workspace) {
         // </block>
 
     var buttonPress = goog.dom.createDom('block');
-    buttonPress.setAttribute('type', 'button_press'); 
+    buttonPress.setAttribute('type', 'buttonPress'); 
     var field1 = goog.dom.createDom('field');
     field1.setAttribute('name', 'NAME');
     field1.innerHTML = 'Button Press';
     var statement = goog.dom.createDom('statement');
-    statement.setAttribute('name', 'steps');
+    statement.setAttribute('name', 'STACK');
     var open_close_hand = goog.dom.createDom('block');
     open_close_hand.setAttribute('type', 'open_close_hand');
     var field2 = goog.dom.createDom('field');
     field2.setAttribute('name', 'open_close_hand');
     field2.innerHTML = 'close';
+    var next1 = goog.dom.createDom('next');
+    var change_arm_by = goog.dom.createDom('block');
+    change_arm_by.setAttribute('type', 'change_arm_by');
+    var value1 = new goog.dom.createDom('value');
+    value1.setAttribute('name', 'dist');
+    var shadow1 = goog.dom.createDom('shadow');
+    shadow1.setAttribute('type', 'math_number');
+    value1.appendChild(shadow1);
+    var field3 = goog.dom.createDom('field');
+    field3.setAttribute('name', 'NUM');
+    field3.innerHTML = '20';
+    shadow1.appendChild(field3);
+    change_arm_by.appendChild(value1);
+    var next2 = goog.dom.createDom('next');   
+    var change_arm_by2 = goog.dom.createDom('block');
+    change_arm_by2.setAttribute('type', 'change_arm_by');
+    var value2 = new goog.dom.createDom('value');
+    value2.setAttribute('name', 'dist');
+    var shadow2 = goog.dom.createDom('shadow');
+    shadow2.setAttribute('type', 'math_number');
+    value2.appendChild(shadow2);
+    var field4 = goog.dom.createDom('field');
+    field4.setAttribute('name', 'NUM');
+    field4.innerHTML = '-20';
+    shadow2.appendChild(field4);
+    change_arm_by2.appendChild(value2);
 
+    next2.appendChild(change_arm_by2);
+    change_arm_by.appendChild(next2);
+    next1.appendChild(change_arm_by);
+    open_close_hand.appendChild(next1);
+    open_close_hand.appendChild(field2);
     statement.appendChild(open_close_hand);
     buttonPress.appendChild(field1);
     buttonPress.appendChild(statement);

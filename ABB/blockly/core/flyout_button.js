@@ -193,7 +193,7 @@ Blockly.FlyoutButton.prototype.createDom = function() {
             'x': this.width},
            gear);
       gear.setAttribute('style', 'cursor:pointer;');
-      gear.setAttribute('onclick', 'alert("Put RobotStudio hook here!")');
+      gear.setAttribute('onclick', 'window.external.ReDefineTarget("'+svgText.textContent+'");');
       var gearTitle = Blockly.utils.createSvgElement('title', {}, gear);
       gearTitle.innerHTML = 'Configure Location';
 
