@@ -215,7 +215,6 @@ Blockly.Locations.flyoutCategory = function(workspace) {
   var change_arm_by = goog.dom.createDom('block');
   change_arm_by.setAttribute('type', 'change_arm_by');
   change_arm_by.setAttribute('gap', 16);
-
   var value = goog.dom.createDom('value');
   value.setAttribute('name', 'dist');
   var shadow = goog.dom.createDom('shadow');

@@ -61,7 +61,7 @@ Blockly.FieldLocation.prototype.init = function() {
         this.sourceBlock_.isInFlyout ?
             this.sourceBlock_.workspace.targetWorkspace :
             this.sourceBlock_.workspace;
-    this.setValue(Blockly.Location.generateUniqueName(workspace));
+    this.setValue(Blockly.Locations.generateUniqueName(workspace));
   }
 
 
